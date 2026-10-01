@@ -1,0 +1,8 @@
+{
+  "name": "PriangLab Management System",
+  "description": "Sistem Manajemen Inventaris Gudang & Ekspedisi profesional berbasis React, real-time Firestore, dan barcode scanning.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

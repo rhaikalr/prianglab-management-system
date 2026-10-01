@@ -1,0 +1,129 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Master data for inventory catalog SKU items",
+      "type": "object",
+      "properties": {
+        "sku": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 200 },
+        "barcode": { "type": "string", "maxLength": 64 },
+        "binLocation": { "type": "string", "maxLength": 64 },
+        "unit": { "type": "string", "maxLength": 32 },
+        "availableStock": { "type": "number" },
+        "minStock": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["sku", "name", "barcode", "availableStock", "minStock"]
+    },
+    "InboundTransaction": {
+      "title": "InboundTransaction",
+      "description": "Records of incoming inventory",
+      "type": "object",
+      "properties": {
+        "poNumber": { "type": "string", "maxLength": 64 },
+        "productId": { "type": "string", "maxLength": 64 },
+        "sku": { "type": "string", "maxLength": 64 },
+        "productName": { "type": "string", "maxLength": 200 },
+        "quantity": { "type": "number" },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdBy": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["sku", "productName", "quantity", "createdAt"]
+    },
+    "OutboundTransaction": {
+      "title": "OutboundTransaction",
+      "description": "Records of outgoing inventory",
+      "type": "object",
+      "properties": {
+        "transactionNumber": { "type": "string", "maxLength": 64 },
+        "productId": { "type": "string", "maxLength": 64 },
+        "sku": { "type": "string", "maxLength": 64 },
+        "productName": { "type": "string", "maxLength": 200 },
+        "quantity": { "type": "number" },
+        "destination": { "type": "string", "maxLength": 200 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdBy": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["sku", "productName", "quantity", "createdAt"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Audit trail log of all inventory operations",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["INBOUND", "OUTBOUND", "SCAN_PACKER", "MASTER_DATA"] },
+        "sku": { "type": "string", "maxLength": 64 },
+        "productName": { "type": "string", "maxLength": 200 },
+        "quantity": { "type": "number" },
+        "details": { "type": "string", "maxLength": 500 },
+        "user": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["type", "details", "user", "createdAt"]
+    },
+    "PackerSession": {
+      "title": "PackerSession",
+      "description": "Packer expedition batch sheets",
+      "type": "object",
+      "properties": {
+        "batchTitle": { "type": "string", "maxLength": 120 },
+        "totalResi": { "type": "number" },
+        "totalQty": { "type": "number" },
+        "scannedOutCount": { "type": "number" },
+        "status": { "type": "string", "enum": ["ACTIVE", "COMPLETED"] },
+        "createdBy": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["batchTitle", "status", "createdAt"]
+    },
+    "PackerResiItem": {
+      "title": "PackerResiItem",
+      "description": "Scanned tracking number with itemized SKUs in a packing batch",
+      "type": "object",
+      "properties": {
+        "sessionId": { "type": "string", "maxLength": 64 },
+        "resiNumber": { "type": "string", "maxLength": 100 },
+        "courier": { "type": "string", "maxLength": 50 },
+        "sku": { "type": "string", "maxLength": 64 },
+        "productName": { "type": "string", "maxLength": 200 },
+        "quantity": { "type": "number" },
+        "isScannedOut": { "type": "boolean" },
+        "scannedOutAt": { "type": "string", "maxLength": 64 },
+        "scannedBy": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["sessionId", "resiNumber", "sku", "quantity", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Inventory catalog products"
+    },
+    "/inbound_transactions/{id}": {
+      "schema": "InboundTransaction",
+      "description": "Inbound stock movements"
+    },
+    "/outbound_transactions/{id}": {
+      "schema": "OutboundTransaction",
+      "description": "Outbound stock movements"
+    },
+    "/activity_logs/{id}": {
+      "schema": "ActivityLog",
+      "description": "System activity logs"
+    },
+    "/packer_sessions/{sessionId}": {
+      "schema": "PackerSession",
+      "description": "Packer sheets"
+    },
+    "/packer_resi_items/{itemId}": {
+      "schema": "PackerResiItem",
+      "description": "Scanned resi and item entries"
+    }
+  }
+}
